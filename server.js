@@ -7,14 +7,26 @@ const cors = require('cors');
 app.use(cors());
 
 io.on('connection', socket => {
-    console.log("user has already logged in")
     const online = Object.keys(io.engine.clients);
     io.emit('users', JSON.stringify(online));
+    io.emit('allRooms', getAllRooms());
+    io.emit('emptyRooms', getEmptyRooms());
     
     socket.on('disconnect', ()=>{
-        console.log("user has already logged out");
         const online = Object.keys(io.engine.clients);
         io.emit('users', JSON.stringify(online));
+    });
+
+    socket.on('join', object => {
+        const { joiningUser, room } = object;
+        socket.join(room.id);
+        joinTheRoom(io, room, joiningUser);
+    });
+
+    socket.on('leave', object => {
+        const { leavingUser, room } = object;
+        socket.leave(room.id);
+        leaveTheRoom(io, room, leavingUser);
     });
 
 });
