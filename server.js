@@ -13,16 +13,14 @@ const {
 } = require('./rooms');
 
 
-app.use(cors());
-
 io.on('connection', socket => {
+    const leavingUser = socket.id;
     const online = Object.keys(io.engine.clients);
     io.emit('users', JSON.stringify(online));
     io.emit('allRooms', getAllRooms());
     io.emit('emptyRooms', getEmptyRooms());
     
     socket.on('disconnect', ()=>{
-        const leavingUser = socket.id;
         const online = Object.keys(io.engine.clients);
         const theRoomWhereUserIs = getAllRooms().find(room => room.users.includes(leavingUser))
         io.emit('users', JSON.stringify(online));
@@ -38,8 +36,7 @@ io.on('connection', socket => {
         joinTheRoom(io, room, joiningUser);
     });
 
-    socket.on('leave', object => {
-        const { leavingUser, room } = object;
+    socket.on('leave', room => {
         socket.leave(room.id);
         leaveTheRoom(io, room, leavingUser);
     });
@@ -55,5 +52,6 @@ io.on('connection', socket => {
 });
 
 
+app.use(cors());
 
 http.listen(PORT, () => console.log('Server started'))
