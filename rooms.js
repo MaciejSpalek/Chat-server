@@ -24,11 +24,6 @@ const getGivenRoom = (roomID) => {
     return allRooms[index];
 }
 
-const getGivenRoom = (roomID) => {
-    const index = allRooms.findIndex(room => room.id === roomID)
-    return allRooms[index];
-}
-
 const removeUserFromRoom = (array, room, leavingUser) => {
     const { id } = room;
     const foundRoom = array.find(element => element.id === id); 
