@@ -5,7 +5,7 @@ const {
     joinTheRoom
 } = require('./rooms');
 
-const listeners = (io) => {
+const socketInstance = (io) => {
     io.on('connection', socket => {
         const leavingUser = socket.id;
         const online = Object.keys(io.engine.clients);
@@ -45,4 +45,4 @@ const listeners = (io) => {
     });
 }
 
-module.exports = { listeners };
+module.exports = { socketInstance };
